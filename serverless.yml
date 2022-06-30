@@ -1,0 +1,71 @@
+service: aws-nodejs
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  environment:
+    tableName: ${self:custom.tableName}
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - dynamodb:*
+          Resource: "*"
+
+plugins:
+  - serverless-webpack
+
+package:
+  individually: true
+
+functions:
+  hello:
+    handler: handler.hello
+  getItem:
+    handler: lambdas/endpoints/getItem.handler
+    events:
+      - http:
+          path: get-item/{ID}
+          method: GET
+          cors: true
+  createItem:
+    handler: lambdas/endpoints/createItem.handler
+    events:
+      - http:
+          path: create-item/{ID}
+          method: POST
+          cors: true
+  deleteItem:
+    handler: lambdas/endpoints/deleteItem.handler
+    events:
+      - http:
+          path: delete-item/{ID}
+          method: DELETE
+          cors: true
+  updateItem:
+    handler: lambdas/endpoints/updateItem.handler
+    events:
+      - http:
+          path: update-item/{ID}
+          method: PUT
+          cors: true
+
+custom:
+  tableName: aws-nodejs-table
+
+resources:
+  Resources:
+    MyFirstDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.tableName}
+        AttributeDefinitions:
+          - AttributeName: ID
+            AttributeType: N
+        KeySchema:
+          - AttributeName: ID
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST

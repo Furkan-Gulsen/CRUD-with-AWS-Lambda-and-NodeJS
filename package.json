@@ -1,0 +1,13 @@
+{
+  "name": "CRUD-with-AWS-Lambda-and-NodeJS",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "scripts": {},
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "serverless-webpack": "^5.7.1",
+    "webpack": "^5.73.0"
+  }
+}
